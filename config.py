@@ -5,7 +5,7 @@ Configuration settings for No Mercy Zone Bot
 import os
 
 # Bot Configuration
-BOT_TOKEN = "8341741465:AAG81VWIc84evKwBR1IIbwMoaHQJwgLXLsY"
+BOT_TOKEN = "8347000839:AAFo74khW7TJwSWgE_RB5ab668T2eb5VngM"
 ADMIN_ID = 5558853984
 ADMIN_USERNAME = "@Ghost_Commander"
 CHANNEL_ID = -1002880573048
