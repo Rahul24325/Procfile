@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🚫 No Mercy Zone Bot 🚫
+🚫 No Mercy Bot 🚫
 BGMI Tournament Management Bot with Payment Processing
 """
 
