@@ -194,7 +194,7 @@ if result:
 else:
     return {"total_revenue": 0, "total_transactions": 0, "unique_users": 0}
 
-✅ Async versions for optional use (e.g., if using motor in future):
+ Async versions for optional use (e.g., if using motor in future):
 
 async def save_payment(payment_data): return db.payments.insert_one(payment_data)
 
