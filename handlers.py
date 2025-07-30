@@ -356,52 +356,44 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 
-async def ai_host_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    args = context.args
+async def ai_host_command(update: Update,
 
-    if not args:
-        await update.message.reply_text(
-            "🤖 *AI TOURNAMENT SUGGESTIONS*\n\n"
-            "Usage: /aihost <type>\n\n"
-            "*Available types:*\n"
-            "• /aihost solo - AI solo tournament suggestion\n"
-            "• /aihost duo - AI duo tournament suggestion\n"
-            "• /aihost squad - AI squad tournament suggestion\n\n"
-            "AI analysis ke saath smart suggestions! 🧠",
-            parse_mode="Markdown"
-        )
-        return
+context: ContextTypes.DEFAULT_TYPE):
 
-    tournament_type = args[0].lower()
+args = context.args
 
-    if tournament_type not in ['solo', 'duo', 'squad']:
-        await update.message.reply_text("❌ Invalid type. Use `/aihost solo`, `/aihost duo`, or `/aihost squad`.", parse_mode="Markdown")
-        return
+if not args: await update.message.reply_text(
 
-    suggestion = get_ai_tournament_suggestion(tournament_type)
-    profit = calculate_advanced_profit_analysis(
-        tournament_type,
-        suggestion['optimal_participants'],
-        suggestion['entry_fee'],
-        suggestion
-    )
+" *AI TOURNAMENT
 
-    response = (
-        f"🤖 *AI TOURNAMENT SUGGESTION*\n\n"
-        f"🎮 Type: {tournament_type.upper()}\n"
-        f"🗺 Map: {suggestion['map']}\n"
-        f"💰 Entry Fee: ₹{suggestion['entry_fee']}\n"
-        f"🏆 Prize Type: {suggestion['prize_type']}\n"
-        f"📈 Confidence: {suggestion['confidence']}%\n"
-        f"🧠 Reason: {suggestion['reasoning']}\n"
-        f"👥 Optimal Participants: {suggestion['optimal_participants']}\n\n"
-        f"💹 *PROFIT ANALYSIS:*\n"
-        f"• Total Collection: ₹{profit['total_collection']:,}\n"
-        f"• Estimated Payout: ₹{profit['estimated_payout']:,}\n"
-        f"• Net Profit: ₹{profit['net_profit']:,}\n"
-        f"• ROI: {profit['adjusted_roi']}%\n"
-        f"• Risk: {profit['risk_level']}\n"
-        f"• Recommendation: {profit['recommendation']}"
-    )
+SUGGESTIONS*\n\n"
 
-    await update.message.reply_text(response, parse_mode="Markdown")
+"Usage: /aihost `<type>'\n\n"
+
+"*Available types:*\n"
+
+"• /aihost solo - AI solo
+
+tournament suggestion\n"
+
+"• /aihost duo - AI duo tournament suggestion\n"
+
+"• /aihost squad - AI squad tournament suggestion\n\n"
+
+"AI analysis ke saath smart
+
+suggestions!
+
+parse_mode='Markdown'
+
+return
+
+tournament_type = args[0].lower() suggestion =
+
+get_ai_tournament_suggestion(tournament_type)
+
+await
+
+update.message.reply_text(suggestion,
+
+parse_mode='Markdown')
