@@ -130,11 +130,12 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 3. When they join using your code, you get free entry!
 
 🔗 Share Link:
-https://t.me/YourBotUsername?start={user_data['referral_code']}
+https://t.me/NoMercyZoneBot?start={user_data['referral_code']}
 
 💰 Benefits:
 • 1 referral = 1 free tournament entry
 • Unlimited referrals allowed
+• After referral send the screenshot to admin
 • Instant credit on successful referral
 
 🚫 No Mercy Zone mein dost bhi competition hai! 🔥"""
