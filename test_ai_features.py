@@ -71,3 +71,34 @@ def test_ai_features():
 
 if __name__ == '__main__':
     test_ai_features()
+
+def get_ai_tournament_suggestion(mode: str) -> str:
+    if mode == "solo":
+        return (
+            "🎯 *AI Suggested Solo Tournament:*\n"
+            "• Entry Fee: ₹20\n"
+            "• Prize Pool: ₹500\n"
+            "• Top 10 Players Win\n"
+            "• Map: Erangel\n"
+            "• Mode: TPP"
+        )
+    elif mode == "duo":
+        return (
+            "👬 *AI Suggested Duo Tournament:*\n"
+            "• Entry Fee: ₹40/team\n"
+            "• Prize Pool: ₹1000\n"
+            "• Top 5 Teams Win\n"
+            "• Map: Livik\n"
+            "• Mode: FPP"
+        )
+    elif mode == "squad":
+        return (
+            "👑 *AI Suggested Squad Tournament:*\n"
+            "• Entry Fee: ₹100/team\n"
+            "• Prize Pool: ₹5000\n"
+            "• Top 3 Squads Win\n"
+            "• Map: Miramar\n"
+            "• Mode: TPP/FPP"
+        )
+    else:
+        return "❌ Invalid type! Use `/aihost solo`, `/aihost duo`, or `/aihost squad`"
