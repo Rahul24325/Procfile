@@ -1,6 +1,6 @@
 """ Database operations for No Mercy Zone Bot (Fixed Version + Async Support) """
 
-from pymongo 
+from pymongo import MongoClient 
 import MongoClient from datetime 
 import datetime, timezone, timedelta 
 import random 
