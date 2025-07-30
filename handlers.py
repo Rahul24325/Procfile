@@ -1,5 +1,6 @@
 """
 User command handlers for No Mercy Zone Bot
+Fixed tournament-specific payment system
 """
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -18,13 +19,13 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Check if user is admin first
     if str(user.id) == str(ADMIN_ID):
         # Admin gets special welcome and dashboard
-        admin_welcome = f"""👑 Welcome back, Ghost Commander! 🧨
+        admin_welcome = f"""ðŸ‘‘ Welcome back, Ghost Commander! ðŸ§¨
 
-🔥 The Boss has entered the lobby! 
-💻 System ready for your commands...
-⚡ All servers armed and operational!
+ðŸ”¥ The Boss has entered the lobby! 
+ðŸ’» System ready for your commands...
+âš¡ All servers armed and operational!
 
-Your domain awaits your orders! 💀"""
+Your domain awaits your orders! ðŸ’€"""
         
         await update.message.reply_text(admin_welcome)
         
@@ -36,7 +37,7 @@ Your domain awaits your orders! 💀"""
     # Check if user is banned
     user_data = get_user(user.id)
     if user_data and user_data.get("banned", False):
-        await update.message.reply_text("🚫 You are banned from using this bot!")
+        await update.message.reply_text("ðŸš« You are banned from using this bot!")
         return
     
     # Create or get user
@@ -48,13 +49,13 @@ Your domain awaits your orders! 💀"""
     await update.message.reply_text(welcome_msg)
     
     # Check channel membership
-    is_member = await check_channel_membership(context.bot, user.id)
+    is_member = check_channel_membership(context.bot, user.id)
     
     if not is_member:
         # Show channel join button
         keyboard = [
-            [InlineKeyboardButton("✅ Join Channel", url=CHANNEL_URL)],
-            [InlineKeyboardButton("✅ I've Joined", callback_data="check_membership")]
+            [InlineKeyboardButton("âœ… Join Channel", url=CHANNEL_URL)],
+            [InlineKeyboardButton("âœ… I've Joined", callback_data="check_membership")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
@@ -72,12 +73,12 @@ async def show_main_menu(update, context, user_data):
     menu_msg = get_main_menu_message(user_data["first_name"], user_data["referral_code"])
     
     keyboard = [
-        [InlineKeyboardButton("🎮 Active Tournament", callback_data="active_tournament")],
-        [InlineKeyboardButton("📜 Terms & Condition", callback_data="terms_condition")],
-        [InlineKeyboardButton("👥 Invite Friends", callback_data="invite_friends")],
-        [InlineKeyboardButton("📱 Share WhatsApp Status", callback_data="whatsapp_status")],
-        [InlineKeyboardButton("📜 Match History", callback_data="match_history")],
-        [InlineKeyboardButton("🆘 Help", callback_data="help")]
+        [InlineKeyboardButton("ðŸŽ® Active Tournament", callback_data="active_tournament")],
+        [InlineKeyboardButton("ðŸ“œ Terms & Condition", callback_data="terms_condition")],
+        [InlineKeyboardButton("ðŸ‘¥ Invite Friends", callback_data="invite_friends")],
+        [InlineKeyboardButton("ðŸ“± Share WhatsApp Status", callback_data="whatsapp_status")],
+        [InlineKeyboardButton("ðŸ“œ Match History", callback_data="match_history")],
+        [InlineKeyboardButton("ðŸ†˜ Help", callback_data="help")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
@@ -95,16 +96,16 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = get_user(user_id)
     
     if query.data == "check_membership":
-        is_member = await check_channel_membership(context.bot, user_id)
+        is_member = check_channel_membership(context.bot, user_id)
         if is_member:
             update_user(user_id, {"is_member": True})
             await show_main_menu(update, context, user_data)
         else:
             await query.edit_message_text(
-                "❌ Channel abhi bhi join nahi kiya! Pehle join karo:",
+                "âŒ Channel abhi bhi join nahi kiya! Pehle join karo:",
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton("✅ Join Channel", url=CHANNEL_URL)],
-                    [InlineKeyboardButton("✅ I've Joined", callback_data="check_membership")]
+                    [InlineKeyboardButton("âœ… Join Channel", url=CHANNEL_URL)],
+                    [InlineKeyboardButton("âœ… I've Joined", callback_data="check_membership")]
                 ])
             )
     
@@ -113,33 +114,33 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     elif query.data == "terms_condition":
         rules_msg = get_rules_message()
-        keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
         await query.edit_message_text(
             rules_msg,
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
     
     elif query.data == "invite_friends":
-        referral_msg = f"""👥 INVITE FRIENDS & EARN FREE ENTRIES
+        referral_msg = f"""ðŸ‘¥ INVITE FRIENDS & EARN FREE ENTRIES
 
-🎯 Your Personal Referral Code: {user_data['referral_code']}
+ðŸŽ¯ Your Personal Referral Code: {user_data['referral_code']}
 
-📤 How to Share:
+ðŸ“¤ How to Share:
 1. Copy your referral code
 2. Share with friends
 3. When they join using your code, you get free entry!
 
-🔗 Share Link:
+ðŸ”— Share Link:
 https://t.me/YourBotUsername?start={user_data['referral_code']}
 
-💰 Benefits:
-• 1 referral = 1 free tournament entry
-• Unlimited referrals allowed
-• Instant credit on successful referral
+ðŸ’° Benefits:
+â€¢ 1 referral = 1 free tournament entry
+â€¢ Unlimited referrals allowed
+â€¢ Instant credit on successful referral
 
-🚫 No Mercy Zone mein dost bhi competition hai! 🔥"""
+ðŸš« No Mercy Zone mein dost bhi competition hai! ðŸ”¥"""
         
-        keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
         await query.edit_message_text(
             referral_msg,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -147,9 +148,9 @@ https://t.me/YourBotUsername?start={user_data['referral_code']}
     
     elif query.data == "whatsapp_status":
         status_template = get_whatsapp_status_template(user_data['referral_code'])
-        keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
         await query.edit_message_text(
-            f"📱 WHATSAPP STATUS TEMPLATE\n\nCopy and paste this as your WhatsApp status:\n\n{status_template}",
+            f"ðŸ“± WHATSAPP STATUS TEMPLATE\n\nCopy and paste this as your WhatsApp status:\n\n{status_template}",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
     
@@ -158,7 +159,7 @@ https://t.me/YourBotUsername?start={user_data['referral_code']}
     
     elif query.data == "help":
         help_msg = get_help_message()
-        keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
         await query.edit_message_text(
             help_msg,
             reply_markup=InlineKeyboardMarkup(keyboard)
@@ -170,21 +171,25 @@ https://t.me/YourBotUsername?start={user_data['referral_code']}
     elif query.data.startswith("join_tournament_"):
         tournament_id = query.data.replace("join_tournament_", "")
         await handle_tournament_join(update, context, tournament_id)
+    
+    elif query.data.startswith("pay_for_tournament_"):
+        tournament_id = query.data.replace("pay_for_tournament_", "")
+        await show_payment_instructions(update, context, tournament_id)
 
 async def show_active_tournaments(update, context):
     """Show active tournaments"""
     tournaments = get_active_tournaments()
     
     if not tournaments:
-        msg = "🚫 Koi active tournament nahi hai abhi!\n\nJaldi hi naya tournament aayega. Channel pe active raho! 🔥"
-        keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+        msg = "ðŸš« Koi active tournament nahi hai abhi!\n\nJaldi hi naya tournament aayega. Channel pe active raho! ðŸ”¥"
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
         await update.callback_query.edit_message_text(
             msg,
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
     
-    msg = "🎮 ACTIVE TOURNAMENTS\n\n"
+    msg = "ðŸŽ® ACTIVE TOURNAMENTS\n\n"
     keyboard = []
     
     for tournament in tournaments:
@@ -193,12 +198,12 @@ async def show_active_tournaments(update, context):
         
         keyboard.append([
             InlineKeyboardButton(
-                f"✅ Join {tournament['name']}", 
+                f"âœ… Join {tournament['name']}", 
                 callback_data=f"join_tournament_{tournament['tournament_id']}"
             )
         ])
     
-    keyboard.append([InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")])
+    keyboard.append([InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")])
     
     await update.callback_query.edit_message_text(
         msg,
@@ -206,43 +211,118 @@ async def show_active_tournaments(update, context):
     )
 
 async def handle_tournament_join(update, context, tournament_id):
-    """Handle tournament join request"""
+    """Handle tournament join request - Fixed to check tournament-specific payment"""
     user_id = update.effective_user.id
     user_data = get_user(user_id)
+    tournament = get_tournament(tournament_id)
     
-    # Check if user is confirmed
-    if not user_data.get("confirmed", False):
-        msg = f"""💰 PAYMENT REQUIRED
-
-Tournament join karne ke liye pehle payment karo:
-
-1. UPI ID: {UPI_ID}
-2. Amount pay karo
-3. Screenshot bhejo {ADMIN_USERNAME} ko
-4. /paid command use karke UTR enter karo
-5. Admin approval ke baad join kar sakte ho
-
-🚫 No payment, no entry! 🔥"""
-        
-        keyboard = [[InlineKeyboardButton("🔙 Back", callback_data="active_tournament")]]
+    if not tournament:
+        msg = "âŒ Tournament nahi mila! Koi technical issue hai."
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back", callback_data="active_tournament")]]
         await update.callback_query.edit_message_text(
             msg,
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
     
-    # Join tournament
-    success = join_tournament(user_id, tournament_id)
+    # Check if user has already joined this tournament
+    if is_user_joined_tournament(user_id, tournament_id):
+        msg = f"âœ… Aap already joined ho {tournament['name']} mein!\n\nRoom details milenge match time pe. Ready raho! ðŸ”¥"
+        keyboard = [[InlineKeyboardButton("ðŸ”™ Back", callback_data="active_tournament")]]
+        await update.callback_query.edit_message_text(
+            msg,
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        return
     
-    if success:
-        msg = "✅ Successfully joined tournament!\n\nRoom details milenge match time pe. Ready raho! 🔥"
+    # Check if user has paid for this specific tournament
+    if not has_paid_for_tournament(user_id, tournament_id):
+        # Check for free entries from referrals
+        free_entries = user_data.get("free_entries", 0)
+        
+        if free_entries > 0:
+            # Use free entry
+            success = join_tournament_with_free_entry(user_id, tournament_id)
+            if success:
+                msg = f"âœ… Free entry use karke join ho gaye!\n\nðŸŽ® Tournament: {tournament['name']}\nðŸ’° Free entries remaining: {free_entries - 1}\n\nRoom details milenge match time pe! ðŸ”¥"
+            else:
+                msg = "âŒ Technical issue! Admin se contact karo."
+        else:
+            # Show payment required message
+            msg = f"""ðŸ’° PAYMENT REQUIRED
+
+ðŸŽ® Tournament: {tournament['name']}
+ðŸ’µ Entry Fee: {format_currency(tournament.get('entry_fee', 50))}
+
+Tournament join karne ke liye payment karo:
+
+1. UPI ID: {UPI_ID}
+2. Amount pay karo: {format_currency(tournament.get('entry_fee', 50))}
+3. Screenshot bhejo {ADMIN_USERNAME} ko
+4. /paid {tournament_id} <UTR> command use karo
+5. Admin approval ke baad join kar sakte ho
+
+âš ï¸ Har tournament ke liye alag payment karna hoga!
+ðŸš« No payment, no entry! ðŸ”¥"""
+            
+            keyboard = [
+                [InlineKeyboardButton("ðŸ’³ Payment Instructions", callback_data=f"pay_for_tournament_{tournament_id}")],
+                [InlineKeyboardButton("ðŸ”™ Back", callback_data="active_tournament")]
+            ]
+            await update.callback_query.edit_message_text(
+                msg,
+                reply_markup=InlineKeyboardMarkup(keyboard)
+            )
+            return
     else:
-        msg = "❌ Tournament join nahi ho saka. Admin se contact karo."
+        # User has paid, join tournament
+        success = join_tournament(user_id, tournament_id)
+        if success:
+            msg = f"âœ… Successfully joined {tournament['name']}!\n\nRoom details milenge match time pe. Ready raho! ðŸ”¥"
+        else:
+            msg = "âŒ Tournament join nahi ho saka. Admin se contact karo."
     
-    keyboard = [[InlineKeyboardButton("🔙 Back", callback_data="active_tournament")]]
+    keyboard = [[InlineKeyboardButton("ðŸ”™ Back", callback_data="active_tournament")]]
     await update.callback_query.edit_message_text(
         msg,
         reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+async def show_payment_instructions(update, context, tournament_id):
+    """Show detailed payment instructions for specific tournament"""
+    tournament = get_tournament(tournament_id)
+    
+    if not tournament:
+        await update.callback_query.edit_message_text("âŒ Tournament not found!")
+        return
+    
+    msg = f"""ðŸ’³ PAYMENT INSTRUCTIONS
+
+ðŸŽ® Tournament: {tournament['name']}
+ðŸ’µ Entry Fee: {format_currency(tournament.get('entry_fee', 50))}
+
+ðŸ“‹ Payment Steps:
+1ï¸âƒ£ UPI ID: `{UPI_ID}`
+2ï¸âƒ£ Amount: `{tournament.get('entry_fee', 50)}`
+3ï¸âƒ£ Payment karne ke baad UTR note karo
+4ï¸âƒ£ Screenshot bhejo {ADMIN_USERNAME} ko
+5ï¸âƒ£ Command use karo: `/paid {tournament_id} <YOUR_UTR>`
+
+Example: `/paid {tournament_id} 123456789012`
+
+âš ï¸ Important:
+â€¢ Exact amount pay karo
+â€¢ UTR galat nahi hona chahiye
+â€¢ Screenshot jaruri hai verification ke liye
+â€¢ Har tournament ke liye alag payment
+
+ðŸ”¥ Payment confirm hone ke baad instant join ho jaoge!"""
+    
+    keyboard = [[InlineKeyboardButton("ðŸ”™ Back", callback_data=f"join_tournament_{tournament_id}")]]
+    await update.callback_query.edit_message_text(
+        msg,
+        reply_markup=InlineKeyboardMarkup(keyboard),
+        parse_mode='Markdown'
     )
 
 async def show_match_history(update, context):
@@ -251,17 +331,25 @@ async def show_match_history(update, context):
     user_data = get_user(user_id)
     
     tournaments_joined = user_data.get("tournaments_joined", [])
+    tournament_payments = user_data.get("tournament_payments", {})
     
     if not tournaments_joined:
-        msg = "📜 Abhi tak koi tournament join nahi kiya!\n\nPehla tournament join karo aur history banao! 🎮"
+        msg = "ðŸ“œ Abhi tak koi tournament join nahi kiya!\n\nPehla tournament join karo aur history banao! ðŸŽ®"
     else:
-        msg = f"📜 *YOUR TOURNAMENT HISTORY*\n\n"
-        msg += f"🎮 Total Tournaments: {len(tournaments_joined)}\n"
-        msg += f"💰 Total Spent: {format_currency(user_data.get('total_spent', 0))}\n"
-        msg += f"🏆 Total Earned: {format_currency(user_data.get('total_earned', 0))}\n\n"
-        msg += "Recent tournaments will be shown here..."
+        msg = f"ðŸ“œ *YOUR TOURNAMENT HISTORY*\n\n"
+        msg += f"ðŸŽ® Total Tournaments: {len(tournaments_joined)}\n"
+        msg += f"ðŸ’° Total Spent: {format_currency(user_data.get('total_spent', 0))}\n"
+        msg += f"ðŸ† Total Earned: {format_currency(user_data.get('total_earned', 0))}\n"
+        msg += f"ðŸ†“ Free Entries: {user_data.get('free_entries', 0)}\n\n"
+        
+        msg += "ðŸ’³ *PAYMENT STATUS BY TOURNAMENT:*\n"
+        for tournament_id in tournaments_joined:
+            tournament = get_tournament(tournament_id)
+            if tournament:
+                payment_status = "âœ… Paid" if tournament_id in tournament_payments else "ðŸ†“ Free Entry"
+                msg += f"â€¢ {tournament['name']}: {payment_status}\n"
     
-    keyboard = [[InlineKeyboardButton("🔙 Back to Menu", callback_data="back_to_menu")]]
+    keyboard = [[InlineKeyboardButton("ðŸ”™ Back to Menu", callback_data="back_to_menu")]]
     await update.callback_query.edit_message_text(
         msg,
         reply_markup=InlineKeyboardMarkup(keyboard),
@@ -269,49 +357,74 @@ async def show_match_history(update, context):
     )
 
 async def paid_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle /paid command"""
+    """Handle /paid command - Modified to accept tournament ID"""
     user_id = update.effective_user.id
     
     # Don't process if admin is sending the command
     if str(user_id) == str(ADMIN_ID):
-        await update.message.reply_text("👑 Admin detected! Payment verification skipped.")
+        await update.message.reply_text("ðŸ‘‘ Admin detected! Payment verification skipped.")
         return
     
-    if not context.args:
+    if len(context.args) < 2:
         await update.message.reply_text(
-            "❌ UTR number missing!\n\nUse: /paid <UTR_NUMBER>\nExample: /paid 123456789012"
+            "âŒ Command format galat hai!\n\nUse: /paid <TOURNAMENT_ID> <UTR_NUMBER>\nExample: /paid TOUR001 123456789012\n\nTournament ID tournament details mein milega."
         )
         return
     
-    utr = context.args[0]
+    tournament_id = context.args[0]
+    utr = context.args[1]
+    
+    # Validate tournament exists
+    tournament = get_tournament(tournament_id)
+    if not tournament:
+        await update.message.reply_text(
+            f"âŒ Invalid tournament ID: {tournament_id}\n\nActive tournaments check karo aur sahi ID use karo."
+        )
+        return
     
     if not validate_utr(utr):
         await update.message.reply_text(
-            "❌ Invalid UTR number!\nUTR should be at least 10 digits."
+            "âŒ Invalid UTR number!\nUTR should be at least 10 digits."
         )
         return
     
-    # Create payment request
+    # Check if already paid for this tournament
+    if has_paid_for_tournament(user_id, tournament_id):
+        await update.message.reply_text(
+            f"âœ… Aap already paid ho {tournament['name']} ke liye!\n\nDirect join kar sakte ho."
+        )
+        return
+    
+    # Create tournament-specific payment request
     user_data = get_user(user_id)
     
-    msg = f"""✅ Payment request submitted!
+    # Store pending payment request
+    create_payment_request(user_id, tournament_id, utr, tournament.get('entry_fee', 50))
+    
+    msg = f"""âœ… Payment request submitted!
 
-UTR: `{utr}`
-Status: Pending admin approval
+ðŸŽ® Tournament: {tournament['name']}
+ðŸ’µ Amount: {format_currency(tournament.get('entry_fee', 50))}
+ðŸ§¾ UTR: `{utr}`
+ðŸ“Š Status: Pending admin approval
 
 {ADMIN_USERNAME} will verify and confirm shortly. 
-Notification milega confirmation ke baad! 🔥"""
+Notification milega confirmation ke baad! ðŸ”¥
+
+âš ï¸ Tournament join karne ke liye approval wait karo."""
     
     await update.message.reply_text(msg, parse_mode='Markdown')
     
-    # Forward to admin (but not if admin sent it)
-    admin_msg = f"""💰 *PAYMENT VERIFICATION REQUEST*
+    # Forward to admin
+    admin_msg = f"""ðŸ’° *TOURNAMENT PAYMENT VERIFICATION REQUEST*
 
-👤 User: {user_data.get('first_name', 'Unknown')} (@{user_data.get('username', 'no_username')})
-🆔 User ID: `{user_id}`
-🧾 UTR: `{utr}`
+ðŸ‘¤ User: {user_data.get('first_name', 'Unknown')} (@{user_data.get('username', 'no_username')})
+ðŸ†” User ID: `{user_id}`
+ðŸŽ® Tournament: {tournament['name']} (`{tournament_id}`)
+ðŸ’µ Amount: {format_currency(tournament.get('entry_fee', 50))}
+ðŸ§¾ UTR: `{utr}`
 
-Use: /confirm {user_id} or /decline {user_id}"""
+Use: /confirm {user_id} {tournament_id} or /decline {user_id} {tournament_id}"""
     
     try:
         await context.bot.send_message(
@@ -341,15 +454,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
     
     # Check if user is trying to interact without joining channel
-    is_member = await check_channel_membership(context.bot, user_id)
+    is_member = check_channel_membership(context.bot, user_id)
     
     if not is_member:
-        msg = "❌ Pehle channel join karo!\n\n/start command use karo."
+        msg = "âŒ Pehle channel join karo!\n\n/start command use karo."
         await update.message.reply_text(msg)
         return
     
     # Default response
     await update.message.reply_text(
-        "🤖 Command samajh nahi aaya!\n\nMenu use karo ya /help dekho."
-        )
-    
+        "ðŸ¤– Command samajh nahi aaya!\n\nMenu use karo ya /help dekho."
+    )
