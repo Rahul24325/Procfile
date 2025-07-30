@@ -354,46 +354,37 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🤖 Command samajh nahi aaya!\n\nMenu use karo ya /help dekho."
     )
 
+async def aihost(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """AI tournament suggestions with profit analysis"""
 
+    args = context.args
 
-async def ai_host_command(update: Update,
+    if not args:
+        await update.message.reply_text(
+            """🤖 *AI TOURNAMENT SUGGESTIONS*
 
-context: ContextTypes.DEFAULT_TYPE):
+📌 Usage: `/aihost <type>`
 
-args = context.args
+*Available Types:*
+• `/aihost solo` – AI Solo Tournament Suggestion  
+• `/aihost duo` – AI Duo Tournament Suggestion  
+• `/aihost squad` – AI Squad Tournament Suggestion
 
-if not args: await update.message.reply_text(
+🧠 AI analysis ke saath smart profit-based suggestions pao!""",
+            parse_mode=ParseMode.MARKDOWN
+        )
+        return
 
-" *AI TOURNAMENT
+    type_arg = args[0].lower()
 
-SUGGESTIONS*\n\n"
+    if type_arg not in ["solo", "duo", "squad"]:
+        await update.message.reply_text("❌ Invalid type! Please use `solo`, `duo`, or `squad`.", parse_mode=ParseMode.MARKDOWN)
+        return
 
-"Usage: /aihost `<type>'\n\n"
+    await update.message.reply_text("🧠 AI is thinking... please wait ⏳")
 
-"*Available types:*\n"
+    prompt = f"Give me a profitable tournament idea for BGMI in {type_arg} mode with entry fees, rules, and admin profit analysis."
 
-"• /aihost solo - AI solo
+    ai_response = self.openai.ask(prompt)
 
-tournament suggestion\n"
-
-"• /aihost duo - AI duo tournament suggestion\n"
-
-"• /aihost squad - AI squad tournament suggestion\n\n"
-
-"AI analysis ke saath smart
-
-suggestions!
-
-parse_mode='Markdown'
-
-return
-
-tournament_type = args[0].lower() suggestion =
-
-get_ai_tournament_suggestion(tournament_type)
-
-await
-
-update.message.reply_text(suggestion,
-
-parse_mode='Markdown')
+    await update.message.reply_text(f"✅ *AI Suggestion:*\n\n{ai_response}", parse_mode=ParseMode.MARKDOWN)
