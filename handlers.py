@@ -444,6 +444,20 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     help_msg = get_help_message()
     await update.message.reply_text(help_msg, parse_mode='Markdown')
 
+async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    if not query:  # Added null check
+        return
+        
+    await query.answer()
+    
+    user_id = update.effective_user.id
+    user_data = get_user(user_id)
+    
+    if not user_data:  # Added user data validation
+        await query.edit_message_text("âŒ User data not found! Please use /start command.")
+        return
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle regular text messages"""
     user_id = update.effective_user.id
