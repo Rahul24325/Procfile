@@ -352,3 +352,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🤖 Command samajh nahi aaya!\n\nMenu use karo ya /help dekho."
     )
+
+async def aihost_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handle /aihost command for AI tournament suggestion"""
+    if not context.args:
+        await update.message.reply_text(
+            "🤖 AI TOURNAMENT SUGGESTIONS\n\n"
+            "Usage: /aihost <type>\n\n"
+            "Available types:\n"
+            "• /aihost solo - AI solo tournament suggestion\n"
+            "• /aihost duo - AI duo tournament suggestion\n"
+            "• /aihost squad - AI squad tournament suggestion\n\n"
+            "AI analysis ke saath smart suggestions! 🧠"
+        )
+        return
+
+    mode = context.args[0].lower()
+    suggestion = get_ai_tournament_suggestion(mode)
+
+    await update.message.reply_text(suggestion)
