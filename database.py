@@ -284,3 +284,12 @@ async def get_payment(user_id):
 
 async def get_tournament_async(tournament_id):
     return db.tournaments.find_one({"tournament_id": tournament_id})
+
+def init_database():
+    try:
+        client = MongoClient(MONGODB_URI)
+        db = client[DATABASE_NAME]
+        db.users.create_index("user_id", unique=True)
+        print("✅ Database initialized!")
+    except Exception as e:
+        print("❌ Error initializing database:", e)
