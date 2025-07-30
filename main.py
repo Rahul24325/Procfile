@@ -58,7 +58,7 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     # Run the bot
-    logger.info("🚫 No Mercy Zone Bot starting...")
+    logger.info("🚫 No Mercy Bot starting...")
     application.run_polling(allowed_updates=["message", "callback_query"])
 
 if __name__ == '__main__':
