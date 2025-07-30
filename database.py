@@ -9,6 +9,9 @@ from config import MONGODB_URI, DATABASE_NAME
 client = MongoClient(MONGODB_URI)
 db = client[DATABASE_NAME]
 
+# Creating index for unique user_id
+db.users.create_index("user_id", unique=True)
+
 print("✅ Database connected successfully!")
 
     # Create indexes
