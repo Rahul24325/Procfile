@@ -1,21 +1,15 @@
 """ Database operations for No Mercy Zone Bot (Fixed Version + Async Support) """
 
-from pymongo import MongoClient 
-import MongoClient from datetime 
-import datetime, timezone, timedelta 
-import random 
-import string from config 
-import MONGODB_URI, DATABASE_NAME
+from pymongo import MongoClient
+from datetime import datetime, timezone, timedelta
+import random
+import string
+from config import MONGODB_URI, DATABASE_NAME
 
-Global database connection
+client = MongoClient(MONGODB_URI)
+db = client[DATABASE_NAME]
 
-client = None db = None
-
-def init_database(): """Initialize database connection""" global client, db try: client = MongoClient(MONGODB_URI) db = client[DATABASE_NAME]
-
-# Test connection
-    client.admin.command('ping')
-    print("✅ Database connected successfully!")
+print("✅ Database connected successfully!")
 
     # Create indexes
     db.users.create_index("user_id", unique=True)
