@@ -246,3 +246,17 @@ def get_ai_tournament_suggestion(tournament_type):
     }
     
     return suggestion
+
+# database.py (inside your MongoDB class)
+
+async def save_payment(self, payment_data):
+    await self.payments.insert_one(payment_data)
+
+async def get_payment(self, user_id, tournament_id=None):
+    query = {"user_id": user_id}
+    if tournament_id:
+        query["tournament_id"] = tournament_id
+    return await self.payments.find_one(query)
+
+async def get_tournament(self, tournament_id):
+    return await self.tournaments.find_one({"tournament_id": tournament_id})
