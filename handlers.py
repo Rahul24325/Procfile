@@ -354,46 +354,22 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🤖 Command samajh nahi aaya!\n\nMenu use karo ya /help dekho."
     )
 
-async def ai_host_command(update: Update,
+async def ai_host_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    args = context.args
 
-context: ContextTypes.DEFAULT_TYPE):
+    if not is_admin(update.effective_user.id, ADMIN_ID):
+        await update.message.reply_text("🚫 You are not authorized to use this command.")
+        return
 
-args = context.args
+    suggestions = generate_ai_suggestions()
+    profit = calculate_expected_profit(suggestions)
 
-if not args:
-
-msg = (
-
-SUGGESTIONS*\n\n"
-
-" *AI TOURNAMENT
-
-"Usage: `/aihost <type>`\n\n" "*Available types:*\n"
-
-"• `/aihost solo' -
-
-AI solo
-
-tournament suggestion\n"
-
-"• `/aihost duo` - AI duo
-
-tournament suggestion\n"
-
-" `/aihost squad' - AI squad tournament suggestion\n\n"
-
-"_AI analysis ke saath smart
-
-suggestions!
-
-await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
-
-return
-
-mode = args[0].lower()
-
-response
-
-=
-
-generate_ai_tournament_suggestion(mode) await update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+    await update.message.reply_text(
+        f"🤖 *AI Suggested Tournament*\n\n"
+        f"🏆 Match: {suggestions['match']}\n"
+        f"👥 Players: {suggestions['players']}\n"
+        f"💰 Entry Fee: ₹{suggestions['entry_fee']}\n"
+        f"🏅 Prize Pool: ₹{suggestions['prize_pool']}\n"
+        f"📊 Expected Profit: ₹{profit}\n",
+        parse_mode='Markdown'
+    )
